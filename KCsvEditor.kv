@@ -1,0 +1,60 @@
+<CsvEditor>:
+    grid: grid
+
+    canvas:
+
+        Color:
+            rgba: 235/255, 242/255, 250/255, 1
+
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    GridLayout:
+        cols: 1
+        size: root.width, root.height
+
+        GridLayout:
+            cols: 3
+            width: 500
+            height: 50
+            size_hint: 1, None
+
+            Button:
+                background_normal: ''
+                background_color: [235/255, 242/255, 250/255, 1]
+                color: 29/255, 111/255, 66/255, 1
+                size_hint: None, 1
+                size: 70, 50
+                text: "Open"
+                on_release: root.load(drag="")
+
+            Button:
+                background_normal: ''
+                background_color: [235/255, 242/255, 250/255, 1]
+                color: 29/255, 111/255, 66/255, 1
+                size_hint: None, 1
+                size: 80, 50
+                text: "Save"
+                on_release: root.save_file()
+
+            Button:
+                background_normal: ''
+                background_color: [235/255, 242/255, 250/255, 1]
+                color: 29/255, 111/255, 66/255, 1
+                size_hint: None, 1
+                size: 80, 50
+                text: "Save as"
+                on_release: root.save_as()
+
+        ScrollView:
+            scroll_type: ['bars', 'content']
+            bar_width: '10dp'
+            scroll_wheel_distance: 100
+            effect_cls: 'OpacityScrollEffect'
+            GridLayout:
+                id: grid
+                orientation: "vertical"
+                size_hint_y : None
+                height: self.minimum_height
+                row_default_height: 60
