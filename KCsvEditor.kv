@@ -1,5 +1,7 @@
 <CsvEditor>:
     grid: grid
+    scroll: scroll
+    find: find
 
     canvas:
 
@@ -15,7 +17,7 @@
         size: root.width, root.height
 
         GridLayout:
-            cols: 3
+            cols: 4
             width: 500
             height: 50
             size_hint: 1, None
@@ -47,14 +49,88 @@
                 text: "Save as"
                 on_release: root.save_as()
 
+            BoxLayout:
+
+                Button:
+                    background_normal: ''
+                    background_color: [235/255, 242/255, 250/255, 1]
+                    color: 29/255, 111/255, 66/255, 1
+                    size_hint: None, None
+                    size: 80, 50
+                    text: "Find"
+                    on_release: root.find_ind()
+
+                TextInput:
+                    id: find
+                    multiline: False
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    height: 30
+                    width: 300
+                    font_name: 'MEIRYO.TTC'
+                    size_hint: None, None
+                    background_normal: ''
+                    background_color: [1, 1, 1, 1]
+
         ScrollView:
-            scroll_type: ['bars', 'content']
+            id: scroll
+            scroll_type: ['bars']
             bar_width: '10dp'
-            scroll_wheel_distance: 100
+            bar_color: 29/255, 111/255, 66/255, 1
+            scroll_wheel_distance: 60
             effect_cls: 'OpacityScrollEffect'
+
             GridLayout:
                 id: grid
                 orientation: "vertical"
                 size_hint_y : None
                 height: self.minimum_height
-                row_default_height: 60
+                row_default_height: 30
+                spacing: [2, 2]
+
+<TextInput2>:
+    canvas.before:
+
+        Color:
+            rgba: ([29/255, 111/255, 66/255, 1] if self.focus else (1, 1, 1, 1))
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+        Color:
+            rgba: 1, 1, 1, 1
+
+        Rectangle:
+            pos: self.x+3, self.y+3
+            size: self.width-6, self.height-6
+
+        Color:
+            rgba:
+                ([29/255, 111/255, 66/255, 1]
+                if self.focus and not self._cursor_blink
+                else (0, 0, 0, 0))
+
+        Rectangle:
+            pos: [int(x) for x in self.cursor_pos]
+            size: root.cursor_width, -self.line_height
+
+        Color:
+            rgba: self.disabled_foreground_color if self.disabled else (self.hint_text_color if not self.text else self.foreground_color)
+
+<Label2>:
+    canvas.before:
+
+        Color:
+            rgba: 230/255, 230/255, 230/255, 1
+
+        Rectangle:
+            texture: self.texture
+            size: self.texture_size
+            pos: int(self.center_x - self.texture_size[0] / 2.), int(self.center_y - self.texture_size[1] / 2.)
+
+        Color:
+            rgba: 230/255, 230/255, 230/255, 1
+
+        Rectangle:
+            size: self.size
+            pos: self.pos
