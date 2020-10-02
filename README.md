@@ -8,5 +8,7 @@ You must have "meiryo" font installed in windows, it's should be bundled with wi
 # Requirments
 
 pip install kivy
+
 python -m pip install docutils pygments pypiwin32 kivy.deps.sdl2 kivy.deps.glew;
+
 python -m pip install kivy.deps.gstreamer
