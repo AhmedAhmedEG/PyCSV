@@ -6,13 +6,16 @@ A GUI based python CSV editor, made with kivy library, there was not a decent CS
 
 Modern design.
 
-Open, save, save as and find functions.
+Open, save, save as functions.
+
+Find next/previos functions (suopprts partial searching).
 
 Dragn n drop support.
 
 Moving throug cells with up and down arrows.
 
-Row hightlighting but clocking on the row number.
+Row hightlighting by clicking on the row number.
+
 
 # Requirments
 
