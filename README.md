@@ -5,9 +5,13 @@ A GUI based python CSV editor, made with kivy library, there was not a decent CS
 # Features
 
 Open, save, save as and find functions.
+
 Dragn n drop support.
+
 Moving throug cells with up and down arrows.
+
 Row hightlighting but clocking on the row number.
+
 Modern design.
 
 # Requirments
