@@ -1,20 +1,22 @@
 import unicodecsv as csv
+from kivy.config import Config
 from kivy.app import App
 from kivy.core.window import Window
-from kivy.animation import Animation
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
+from kivy.graphics import Color
+from kivy.graphics import Rectangle
+from kivy.animation import Animation
 from plyer import filechooser
 from kivy.properties import ObjectProperty
 
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.scrollview import ScrollView
-from kivy.uix.widget import Canvas
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.relativelayout import RelativeLayout
-
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 Window.size = (1000, 610)
+
+
+class FindTextInput(TextInput):
+    pass
 
 
 class Label2(Label):
@@ -30,6 +32,7 @@ class CsvEditor(Widget):
     grid = ObjectProperty(None)
     scroll = ObjectProperty(None)
     find = ObjectProperty(None)
+    grid1 = ObjectProperty(None)
     row_len = 0
     row_num = 0
     file_path = ""
@@ -37,6 +40,17 @@ class CsvEditor(Widget):
 
     # def __init__(self, **kwargs):
     #     super(CsvEditor, self).__init__(**kwargs)
+
+
+
+    def find_anim(self, instance, fo=True):
+
+        if fo:
+            anim = Animation(size=(350, 30), t='out_bounce')
+        else:
+            anim = Animation(size=(20, 30), t='out_bounce')
+
+        anim.start(instance)
 
     def child_indexing(self, row_len, textinput_only=True):
 
@@ -69,7 +83,7 @@ class CsvEditor(Widget):
         if drag == "":
 
             try:
-                self.file_path = filechooser.open_file(title="Pick a CSV file..",filters=[("Comma-separated Values", "*.csv")])[0]
+                self.file_path = filechooser.open_file(title="Pick a CSV file..", filters=[("Comma-separated Values", "*.csv")])[0]
 
             except IndexError:
                 pass
@@ -91,16 +105,16 @@ class CsvEditor(Widget):
                     self.grid.cols = self.row_len
 
                     if self.row_num == 0:
-                        self.grid.add_widget(Label(width=50, height=30,
-                                                   size_hint=[None, None]))
+                        self.grid.add_widget(Label2(width=50, height=30,
+                                                    size_hint=[None, None]))
                         self.row_num += 1
 
                     else:
-                        self.grid.add_widget(Label2(text=str(self.row_num), width=50, height=30,
+                        self.grid.add_widget(Label2(text=f'[ref={str(self.row_num)}]{str(self.row_num)}[/ref]', markup=True, width=50, height=30,
                                                     font_name='MEIRYO.TTC',
                                                     font_size='15sp',
                                                     size_hint=[None, None],
-                                                    color=[0, 0, 0, 1]))
+                                                    on_ref_press=self.label_highlight))
                         self.row_num += 1
 
                     for i in row:
@@ -109,15 +123,12 @@ class CsvEditor(Widget):
                             self.grid.add_widget(Label2(text=i, height=30,
                                                         font_name='MEIRYO.TTC',
                                                         font_size='15sp',
-                                                        size_hint=[1, None],
-                                                        color=[0, 0, 0, 1]))
+                                                        size_hint=[1, None]))
                         else:
                             self.grid.add_widget(TextInput2(multiline=False, text=i, height=30,
                                                             font_name='MEIRYO.TTC',
                                                             font_size='14sp',
-                                                            size_hint=[1, None],
-                                                            background_normal='',
-                                                            background_color=[235/255, 242/255, 250/255, 1]))
+                                                            size_hint=[1, None]))
 
     def save_as(self):
         self.save_file(as_new=True)
@@ -155,7 +166,7 @@ class CsvEditor(Widget):
 
             for i in data:
                 for child in i:
-                    if child.text == self.find.text:
+                    if self.find.text in child.text:
                         child.focus = True
                         child.select_all()
                         ind = data.index(i)
@@ -166,7 +177,6 @@ class CsvEditor(Widget):
             spr = 1/self.row_num
 
             self.scroll.scroll_y = 1-(ind*spr)
-            self.find.text = ""
 
         else:
             pass
@@ -225,6 +235,22 @@ class CsvEditor(Widget):
         #     except IndexError:
         #         pass
 
+    def label_highlight(self, instance, text):
+
+        current_label = self.grid.children[self.grid.children.index(instance)]
+        if current_label.color != [31/255, 58/255, 147/255, 1]:
+            current_label.color = [31/255, 58/255, 147/255, 1]
+            with current_label.canvas.before:
+                Color(rgba=[52/255, 152/255, 219/255, 1])
+                Rectangle(size=current_label.size, pos=current_label.pos)
+
+        else:
+            current_label.color = [0, 0, 0, 1]
+            with current_label.canvas.before:
+                Color(rgba=[230/255, 230/255, 230/255, 1])
+                Rectangle(size=current_label.size, pos=current_label.pos)
+
+
 
 class KCsvEditor(App):
 
@@ -232,7 +258,7 @@ class KCsvEditor(App):
         editor = CsvEditor()
         Window.bind(on_dropfile=editor.on_file_drop)
         Window.bind(on_keyboard=editor.on_keyboard)
-        self.title = 'Jo\'s K-CSV Editor'
+        self.title = 'Jo\'s K-CSV Editor v0.3'
         return editor
 
 

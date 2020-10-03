@@ -1,4 +1,5 @@
 <CsvEditor>:
+    grid1: grid1
     grid: grid
     scroll: scroll
     find: find
@@ -6,70 +7,80 @@
     canvas:
 
         Color:
-            rgba: 235/255, 242/255, 250/255, 1
+            rgba: 230/255, 230/255, 230/255, 1
 
         Rectangle:
             size: self.size
             pos: self.pos
 
+        Color:
+            rgba: 235/255, 245/255, 250/255, 1
+
+        Rectangle:
+            pos: self.x+8, self.y+10
+            size: self.width-17, self.height-58
+
     GridLayout:
+        id: grid1
         cols: 1
         size: root.width, root.height
+        padding: [10, 10, 10, 10]
+
+
+        #canvas:
+        #    ###Layout Border###
+        #    Color:
+        #        rgba: 60/255, 60/255, 60/255, 1
+        #
+        #   Line:
+        #        points: (9, 17), (9, 561), (991, 561), (991, 17), (9, 17)
+        #        width: 1.1
+        #        cap: 'square'
 
         GridLayout:
             cols: 4
-            width: 500
-            height: 50
+            height: 40
             size_hint: 1, None
+            padding: [52, 1, 0, 0]
+            spacing: 10
 
             Button:
-                background_normal: ''
-                background_color: [235/255, 242/255, 250/255, 1]
-                color: 29/255, 111/255, 66/255, 1
-                size_hint: None, 1
-                size: 70, 50
+                size: 70, 40
                 text: "Open"
                 on_release: root.load(drag="")
 
             Button:
-                background_normal: ''
-                background_color: [235/255, 242/255, 250/255, 1]
-                color: 29/255, 111/255, 66/255, 1
-                size_hint: None, 1
-                size: 80, 50
+                size: 80, 40
                 text: "Save"
                 on_release: root.save_file()
 
             Button:
-                background_normal: ''
-                background_color: [235/255, 242/255, 250/255, 1]
-                color: 29/255, 111/255, 66/255, 1
-                size_hint: None, 1
-                size: 80, 50
+                size: 80, 40
                 text: "Save as"
                 on_release: root.save_as()
 
             BoxLayout:
+                size_hint: None, 1
+                height: 50
+                spacing: 4
 
                 Button:
-                    background_normal: ''
-                    background_color: [235/255, 242/255, 250/255, 1]
-                    color: 29/255, 111/255, 66/255, 1
-                    size_hint: None, None
-                    size: 80, 50
+                    size: 80, 40
                     text: "Find"
                     on_release: root.find_ind()
 
-                TextInput:
+                FindTextInput:
+
                     id: find
                     multiline: False
-                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    pos_hint: {'center_y': 0.5}
                     height: 30
-                    width: 300
+                    width: 20
                     font_name: 'MEIRYO.TTC'
                     size_hint: None, None
                     background_normal: ''
                     background_color: [1, 1, 1, 1]
+                    on_focus: root.find_anim(find, fo=True) if self.focus else root.find_anim(find, fo=False)
 
         ScrollView:
             id: scroll
@@ -87,9 +98,57 @@
                 row_default_height: 30
                 spacing: [2, 2]
 
+
+
+
+
+<FindTextInput>
+    canvas.before:
+
+        ###Border###
+        Color:
+            rgba: 235/255, 245/255, 250/255, 1
+
+        Rectangle:
+            pos: self.x-2, self.y-2
+            size: self.width+4, self.height+4
+
+
+
+        ###Upper Border###
+        Color:
+            rgba: 1, 1, 1, 1
+
+        Rectangle:
+            pos: self.x, self.y
+            size: self.width, self.height
+
+
+
+        ###Curser Drawing###
+        Color:
+            rgba:
+                ([29/255, 111/255, 66/255, 1]
+                if self.focus and not self._cursor_blink
+                else (0, 0, 0, 0))
+
+        Rectangle:
+            pos: [int(x+2) for x in self.cursor_pos]
+            size: root.cursor_width, -self.line_height
+
+
+
+        ###Text Color###
+        Color:
+            rgba: self.disabled_foreground_color if self.disabled else (self.hint_text_color if not self.text else self.foreground_color)
+
+
+
+
 <TextInput2>:
     canvas.before:
 
+        ###On-Focus Border###
         Color:
             rgba: ([29/255, 111/255, 66/255, 1] if self.focus else (1, 1, 1, 1))
 
@@ -97,6 +156,9 @@
             pos: self.pos
             size: self.size
 
+
+
+        ###On-Focus Upper Border###
         Color:
             rgba: 1, 1, 1, 1
 
@@ -104,6 +166,9 @@
             pos: self.x+3, self.y+3
             size: self.width-6, self.height-6
 
+
+
+        ###Curser Drawing###
         Color:
             rgba:
                 ([29/255, 111/255, 66/255, 1]
@@ -114,23 +179,90 @@
             pos: [int(x) for x in self.cursor_pos]
             size: root.cursor_width, -self.line_height
 
+
+
+        ###Text Color###
         Color:
             rgba: self.disabled_foreground_color if self.disabled else (self.hint_text_color if not self.text else self.foreground_color)
 
+
+
+
+
+
 <Label2>:
+    color: 0, 0, 0, 1
     canvas.before:
 
+        ###Text Drawing###
         Color:
-            rgba: 230/255, 230/255, 230/255, 1
+            rgba: 0, 0, 0, 1
 
         Rectangle:
             texture: self.texture
             size: self.texture_size
             pos: int(self.center_x - self.texture_size[0] / 2.), int(self.center_y - self.texture_size[1] / 2.)
 
+
+
+        ###Background###
         Color:
             rgba: 230/255, 230/255, 230/255, 1
 
         Rectangle:
             size: self.size
             pos: self.pos
+
+
+
+
+
+<Button>:
+    state_image: self.background_normal if self.state == 'normal' else self.background_down
+    disabled_image: self.background_disabled_normal if self.state == 'normal' else self.background_disabled_down
+
+    background_normal: ''
+    background_color: ([235/255, 245/255, 250/255, 1] if not self.state == 'down' else (29/255, 111/255, 66/255, 1))
+    color: ([29/255, 111/255, 66/255, 1] if not self.state == 'down' else (235/255, 245/255, 250/255, 1))
+    size_hint: None, None
+
+    canvas:
+
+        ####Rounded Border###
+        #Color:
+        #    rgba: 60/255, 60/255, 60/255, 1
+        #
+        #RoundedRectangle:
+        #    pos: self.x-2, self.y+1
+        #    size: self.width+4, self.height+1
+        #    radius: [6, 6, 0, 0]
+
+
+
+        ###Rounded Upper-Border###
+        Color:
+            rgba: self.background_color
+
+        RoundedRectangle:
+            pos: self.x-2, self.y+1
+            size: self.width+4, self.height+1
+            radius: [6, 6, 0, 0]
+
+        ###Drop Down###
+        Color:
+            rgba: 235/255, 245/255, 250/255, 1
+
+        Rectangle:
+            size: self.width+6, -4
+            pos: self.x-3, self.y+2
+
+
+
+        ###Text Drawing###
+        Color:
+            rgba: 1, 1, 1, 1
+
+        Rectangle:
+            texture: self.texture
+            size: self.texture_size
+            pos: int(self.center_x - self.texture_size[0] / 2.), int(self.center_y - self.texture_size[1] / 2.)
