@@ -3,6 +3,7 @@ from kivy.config import Config
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.uix.label import Label
+from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 from kivy.uix.widget import Widget
 from kivy.graphics import Color
@@ -19,54 +20,58 @@ class FindTextInput(TextInput):
     pass
 
 
-class Label2(Label):
+class JoButton(Button):
     pass
 
 
-class TextInput2(TextInput):
+class JoButtonLabel(Button):
+    pass
+
+
+class JoTextInput(TextInput):
     pass
 
 
 class CsvEditor(Widget):
 
-    grid = ObjectProperty(None)
+    cells_grid = ObjectProperty(None)
+    title_grid = ObjectProperty(None)
     scroll = ObjectProperty(None)
     find = ObjectProperty(None)
-    grid1 = ObjectProperty(None)
+    findp = ObjectProperty(None)
     row_len = 0
     row_num = 0
     file_path = ""
     focused_cell = 0
+    found_list = []
+    found_item = 0
 
     # def __init__(self, **kwargs):
     #     super(CsvEditor, self).__init__(**kwargs)
 
 
 
-    def find_anim(self, instance, fo=True):
-
+    def find_anim(self, instance, instance2, position, fo=True):
+        x, y = position
         if fo:
-            anim = Animation(size=(350, 30), t='out_bounce')
+            anim1 = Animation(size=(350, 30), t='out_expo')
+            anim2 = Animation(x=x+330, t='out_expo')
         else:
-            anim = Animation(size=(20, 30), t='out_bounce')
+            anim1 = Animation(size=(20, 30), t='out_bounce')
+            anim2 = Animation(x=x-330, t='out_bounce')
 
-        anim.start(instance)
+        anim2.start(instance2)
+        anim1.start(instance)
 
     def child_indexing(self, row_len, textinput_only=True):
 
         data = []
 
-        for child in self.grid.children:
+        for child in self.cells_grid.children:
 
             if textinput_only:
-                try:
-                    # Checking if the child is an TextInput
-                    child.background_normal
+                if "JoTextInput" in str(child):
                     data.append(child)
-
-                except AttributeError:
-                    pass
-
             else:
                 data.append(child)
 
@@ -94,41 +99,42 @@ class CsvEditor(Widget):
         if self.file_path != '':
             with open(self.file_path, 'rb') as f:
 
-                while len(self.grid.children) != 0:
-                    self.grid.remove_widget(self.grid.children[0])
+                while len(self.cells_grid.children) != 0:
+                    self.cells_grid.remove_widget(self.cells_grid.children[0])
 
                 self.row_num = 0
 
                 for row in csv.reader(f, encoding='utf-8'):
 
                     self.row_len = len(row) + 1
-                    self.grid.cols = self.row_len
+                    self.title_grid.cols = self.row_len
+                    self.cells_grid.cols = self.row_len
 
                     if self.row_num == 0:
-                        self.grid.add_widget(Label2(width=50, height=30,
-                                                    size_hint=[None, None]))
+                        self.title_grid.add_widget(JoButtonLabel(text="No.", width=50, height=30,
+                                                                 size_hint=[None, None]))
                         self.row_num += 1
 
                     else:
-                        self.grid.add_widget(Label2(text=f'[ref={str(self.row_num)}]{str(self.row_num)}[/ref]', markup=True, width=50, height=30,
-                                                    font_name='MEIRYO.TTC',
-                                                    font_size='15sp',
-                                                    size_hint=[None, None],
-                                                    on_ref_press=self.label_highlight))
+                        self.cells_grid.add_widget(JoButtonLabel(text=str(self.row_num), width=50, height=30,
+                                                                 font_name='MEIRYO.TTC',
+                                                                 font_size='15sp',
+                                                                 size_hint=[None, None],
+                                                                 on_press=self.label_highlight))
                         self.row_num += 1
 
                     for i in row:
 
                         if self.row_num == 1:
-                            self.grid.add_widget(Label2(text=i, height=30,
-                                                        font_name='MEIRYO.TTC',
-                                                        font_size='15sp',
-                                                        size_hint=[1, None]))
+                            self.title_grid.add_widget(JoButtonLabel(text=i, height=30,
+                                                                     font_name='MEIRYO.TTC',
+                                                                     font_size='15sp',
+                                                                     size_hint=[1, None]))
                         else:
-                            self.grid.add_widget(TextInput2(multiline=False, text=i, height=30,
-                                                            font_name='MEIRYO.TTC',
-                                                            font_size='14sp',
-                                                            size_hint=[1, None]))
+                            self.cells_grid.add_widget(JoTextInput(multiline=False, text=i, height=30,
+                                                                   font_name='MEIRYO.TTC',
+                                                                   font_size='14sp',
+                                                                   size_hint=[1, None]))
 
     def save_as(self):
         self.save_file(as_new=True)
@@ -156,27 +162,26 @@ class CsvEditor(Widget):
     def on_file_drop(self, window, drag_file_path):
         self.load(drag=drag_file_path.decode('utf-8'))
 
-    def find_ind(self):
+    def find_word(self):
 
         if self.find.text != "":
 
-            ind = 0
+            self.found_list = []
 
             data = self.child_indexing(self.row_len-1)
 
             for i in data:
                 for child in i:
                     if self.find.text in child.text:
-                        child.focus = True
-                        child.select_all()
-                        ind = data.index(i)
-                        break
+                        self.found_list.append([data.index(i), child])
 
+            self.found_list[0][1].focus = True
 
-            #Scroll Per Row
+            #Scroll Needed Per Row
             spr = 1/self.row_num
 
-            self.scroll.scroll_y = 1-(ind*spr)
+            self.scroll.scroll_y = 1-(self.found_list[0][0]*spr)
+            self.found_item += 1
 
         else:
             pass
@@ -197,7 +202,7 @@ class CsvEditor(Widget):
             return data, row_ind, child_ind
 
         if keycode == 13:
-            self.find_ind()
+            self.find_word()
 
         elif keycode == 274:
             data, row_ind, child_ind = locate()
@@ -235,20 +240,35 @@ class CsvEditor(Widget):
         #     except IndexError:
         #         pass
 
-    def label_highlight(self, instance, text):
+    def label_highlight(self, instance):
 
-        current_label = self.grid.children[self.grid.children.index(instance)]
-        if current_label.color != [31/255, 58/255, 147/255, 1]:
-            current_label.color = [31/255, 58/255, 147/255, 1]
-            with current_label.canvas.before:
-                Color(rgba=[52/255, 152/255, 219/255, 1])
-                Rectangle(size=current_label.size, pos=current_label.pos)
+        current_label = instance
+        if current_label.background_color != [207/255,  0/255,  15/255,  1]:
+            current_label.background_color = [207/255,  0/255,  15/255,  1]
 
         else:
-            current_label.color = [0, 0, 0, 1]
-            with current_label.canvas.before:
-                Color(rgba=[230/255, 230/255, 230/255, 1])
-                Rectangle(size=current_label.size, pos=current_label.pos)
+            current_label.background_color = [42/255,  87/255,  154/255,  1]
+
+    def find_order(self, direction):
+        
+        if len(self.found_list) == 0:
+            self.find_word()
+
+        if len(self.found_list) != 0:
+            if direction == "up":
+                self.found_item -= 1
+            else:
+                self.found_item += 1
+
+            if self.found_item == len(self.found_list) - 1:
+                self.found_item = 0
+
+            self.found_list[self.found_item][1].focus = True
+
+            # Scroll Needed Per Row
+            spr = 1 / self.row_num
+
+            self.scroll.scroll_y = 1 - (self.found_list[self.found_item][0] * spr)
 
 
 

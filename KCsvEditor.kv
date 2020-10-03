@@ -1,13 +1,14 @@
 <CsvEditor>:
-    grid1: grid1
-    grid: grid
+    cells_grid: cells_grid
+    title_grid: title_grid
     scroll: scroll
     find: find
+    findp: findp
 
     canvas:
 
         Color:
-            rgba: 230/255, 230/255, 230/255, 1
+            rgba: 42/255,  87/255,  154/255,  1
 
         Rectangle:
             size: self.size
@@ -17,44 +18,32 @@
             rgba: 235/255, 245/255, 250/255, 1
 
         Rectangle:
-            pos: self.x+8, self.y+10
-            size: self.width-17, self.height-58
+            pos: self.x, self.y
+            size: self.width, self.height-58
 
     GridLayout:
-        id: grid1
         cols: 1
         size: root.width, root.height
-        padding: [10, 10, 10, 10]
-
-
-        #canvas:
-        #    ###Layout Border###
-        #    Color:
-        #        rgba: 60/255, 60/255, 60/255, 1
-        #
-        #   Line:
-        #        points: (9, 17), (9, 561), (991, 561), (991, 17), (9, 17)
-        #        width: 1.1
-        #        cap: 'square'
+        padding: [0, 0, 0, 0]
 
         GridLayout:
-            cols: 4
-            height: 40
+            cols: 7
+            height: 59
             size_hint: 1, None
-            padding: [52, 1, 0, 0]
-            spacing: 10
+            padding: [56, 16, 0, 0]
+            spacing: 15
 
-            Button:
+            JoButton:
                 size: 70, 40
                 text: "Open"
                 on_release: root.load(drag="")
 
-            Button:
+            JoButton:
                 size: 80, 40
                 text: "Save"
                 on_release: root.save_file()
 
-            Button:
+            JoButton:
                 size: 80, 40
                 text: "Save as"
                 on_release: root.save_as()
@@ -62,36 +51,80 @@
             BoxLayout:
                 size_hint: None, 1
                 height: 50
-                spacing: 4
+                spacing: 7
 
-                Button:
+                JoButton:
                     size: 80, 40
                     text: "Find"
-                    on_release: root.find_ind()
+                    on_release: root.find_word()
 
                 FindTextInput:
 
                     id: find
                     multiline: False
-                    pos_hint: {'center_y': 0.5}
+                    pos_hint: {'center_y': 0.44}
                     height: 30
                     width: 20
                     font_name: 'MEIRYO.TTC'
                     size_hint: None, None
                     background_normal: ''
                     background_color: [1, 1, 1, 1]
-                    on_focus: root.find_anim(find, fo=True) if self.focus else root.find_anim(find, fo=False)
+                    on_focus: root.find_anim(find, findp, findp.pos, fo=True) if self.focus else root.find_anim(find, findp, findp.pos, fo=False)
+
+            FloatLayout:
+                id: findp
+                size_hint: None, 1
+                height: 50
+                width: 100
+                spacing: 4
+
+                JoButton:
+                    text: "=>"
+                    size: 25, 28
+                    pos_hint: {'x': 0.05, 'y':0.1}
+                    canvas.before:
+                        PushMatrix
+                        Rotate:
+                            angle: 90
+                            origin: self.center
+
+                    canvas.after:
+                        PopMatrix
+
+                    on_release: root.find_order("up")
+
+                JoButton:
+                    text: "=>"
+                    size: 25, 28
+                    pos_hint: {'x': 0.33, 'y':0.1}
+                    canvas.before:
+                        PushMatrix
+                        Rotate:
+                            angle: -90
+                            origin: self.center
+
+                    canvas.after:
+                        PopMatrix
+
+                    on_release: root.find_order("down")
+
+        GridLayout:
+            id: title_grid
+            size_hint: 1, None
+            spacing: [2, 1]
+            height: 31
+
 
         ScrollView:
             id: scroll
             scroll_type: ['bars']
             bar_width: '10dp'
-            bar_color: 29/255, 111/255, 66/255, 1
+            bar_color: 42/255,  87/255,  154/255,  1
             scroll_wheel_distance: 60
             effect_cls: 'OpacityScrollEffect'
 
             GridLayout:
-                id: grid
+                id: cells_grid
                 orientation: "vertical"
                 size_hint_y : None
                 height: self.minimum_height
@@ -110,8 +143,8 @@
             rgba: 235/255, 245/255, 250/255, 1
 
         Rectangle:
-            pos: self.x-2, self.y-2
-            size: self.width+4, self.height+4
+            pos: self.x-3, self.y-3
+            size: self.width+6, self.height+6
 
 
 
@@ -145,12 +178,12 @@
 
 
 
-<TextInput2>:
+<JoTextInput>:
     canvas.before:
 
         ###On-Focus Border###
         Color:
-            rgba: ([29/255, 111/255, 66/255, 1] if self.focus else (1, 1, 1, 1))
+            rgba: ([42/255,  87/255,  154/255,  1] if self.focus else (1, 1, 1, 1))
 
         Rectangle:
             pos: self.pos
@@ -190,13 +223,28 @@
 
 
 
-<Label2>:
-    color: 0, 0, 0, 1
-    canvas.before:
+<JoButtonLabel>:
+    state_image: self.background_normal if self.state == 'normal' else self.background_down
+    disabled_image: self.background_disabled_normal if self.state == 'normal' else self.background_disabled_down
 
-        ###Text Drawing###
+    background_normal: ''
+    background_color: 42/255,  87/255,  154/255,  1
+    color: 1,  1,  1,  1
+    size_hint: None, None
+
+    canvas:
+
         Color:
-            rgba: 0, 0, 0, 1
+            rgba: self.background_color
+
+        BorderImage:
+            border: self.border
+            pos: self.pos
+            size: self.size
+            source: self.disabled_image if self.disabled else self.state_image
+
+        Color:
+            rgba: 1, 1, 1, 1
 
         Rectangle:
             texture: self.texture
@@ -205,60 +253,40 @@
 
 
 
-        ###Background###
-        Color:
-            rgba: 230/255, 230/255, 230/255, 1
-
-        Rectangle:
-            size: self.size
-            pos: self.pos
 
 
-
-
-
-<Button>:
+<JoButton>:
     state_image: self.background_normal if self.state == 'normal' else self.background_down
     disabled_image: self.background_disabled_normal if self.state == 'normal' else self.background_disabled_down
 
     background_normal: ''
-    background_color: ([235/255, 245/255, 250/255, 1] if not self.state == 'down' else (29/255, 111/255, 66/255, 1))
-    color: ([29/255, 111/255, 66/255, 1] if not self.state == 'down' else (235/255, 245/255, 250/255, 1))
+    background_color: ([235/255, 245/255, 250/255, 1] if not self.state == 'down' else (42/255,  87/255,  154/255,  1))
+    color: ([42/255,  87/255,  154/255,  1] if not self.state == 'down' else (1, 1, 1, 1))
     size_hint: None, None
 
     canvas:
 
         ####Rounded Border###
-        #Color:
-        #    rgba: 60/255, 60/255, 60/255, 1
-        #
-        #RoundedRectangle:
-        #    pos: self.x-2, self.y+1
-        #    size: self.width+4, self.height+1
-        #    radius: [6, 6, 0, 0]
+        Color:
+            rgba: 230/255,  230/255,  230/255,  1
 
-
+        RoundedRectangle:
+            pos: self.x-6, self.y
+            size: self.width+12, self.height+7
+            radius: [15, 15, 0, 0]
 
         ###Rounded Upper-Border###
         Color:
             rgba: self.background_color
 
         RoundedRectangle:
-            pos: self.x-2, self.y+1
-            size: self.width+4, self.height+1
-            radius: [6, 6, 0, 0]
-
-        ###Drop Down###
-        Color:
-            rgba: 235/255, 245/255, 250/255, 1
-
-        Rectangle:
-            size: self.width+6, -4
-            pos: self.x-3, self.y+2
-
+            pos: self.x-4, self.y+1
+            size: self.width+8, self.height+4
+            radius: [15, 15, 0, 0]
 
 
         ###Text Drawing###
+
         Color:
             rgba: 1, 1, 1, 1
 
