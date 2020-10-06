@@ -8,13 +8,21 @@ Modern design.
 
 Open, save, save as functions.
 
-Find next/previos functions (suopprts partial searching).
+Find next/previos function (suopprts partial searching).
+
+Find n Replace function.
 
 Dragn n drop support.
 
+Auto backup function (every 5 mins).
+
 Moving throug cells with up and down arrows.
 
-Row hightlighting by clicking on the row number.
+Row hightlighting by clicking on the row number, navigate between highlighted rows by using CTRL and SHIFT.
+
+Theme chnager.
+
+Fully animated.
 
 
 # Requirments
