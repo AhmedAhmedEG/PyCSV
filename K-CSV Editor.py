@@ -308,8 +308,7 @@ class CsvEditor(Widget):
         mins = int(now.strftime("%M"))
         secs = int(now.strftime("%S"))
         passed_mins = int(mins - self.current_mins)
-        print(secs)
-        if secs == 10:
+        if passed_mins % 5 == 0 and secs == 0:
             name = basename(self.file_path)
             self.file_path = self.file_path.replace(name, name.replace(".csv", ".csv.backup"))
             self.save_file(save_as=False)
