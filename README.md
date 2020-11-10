@@ -33,6 +33,12 @@ python -m pip install docutils pygments pypiwin32 kivy.deps.sdl2 kivy.deps.glew;
 
 python -m pip install kivy.deps.gstreamer
 
+pip install unicodecsv
+
+pip install plyer
+
+pip install spello
+
 Python version must be before 2.7+, Kivy doesn't support 2.8+.
 
 K-CSV Editor.py and KCsvEditor.kv and MEIRYI.TTC must be in the same directory.
