@@ -1,6 +1,6 @@
 # PyCSV Editor
 
-Very Rich GUI based python CSV editor, made with kivy library, there was not a decent CSV editor made with python on github, so i started made it myself, and then it have growen to a big project.
+Very Rich GUI based python CSV editor, made with kivy python library, there was not a decent CSV editor made with python on github, so I started making one myself, and then it have grown to a big project.
 
 # Features
 
