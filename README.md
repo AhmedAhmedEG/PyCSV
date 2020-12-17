@@ -32,6 +32,9 @@ Theme changer.
 
 And many more...
 
+# Spell Check
+
+you can download full english models from here: https://github.com/hellohaptik/spello#get-started-with-pre-trained-models
 
 # Requirments
 
