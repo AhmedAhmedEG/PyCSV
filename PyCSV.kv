@@ -1,0 +1,435 @@
+<CsvEditor>:
+    cells_grid: cells_grid
+    title_grid: title_grid
+    title_grid2: title_grid2
+    rows_grid: rows_grid
+    for_float: for_float
+    scroll: scroll
+    scroll2: scroll2
+    find_button: find_button
+    find_textinput: find_textinput
+    find_textinput2: find_textinput2
+    find_next: find_next
+    find_prev: find_prev
+    replace_all: replace_all
+    open: open
+    save: save
+    save_as: save_as
+
+    canvas:
+        Color:
+            rgba: root.theme[0]
+        Rectangle:
+            size: self.size
+            pos: self.pos
+        Color:
+            rgba: 235/255, 245/255, 250/255, 1
+        Rectangle:
+            pos: self.x, self.y
+            size: self.width, self.height-58
+
+    GridLayout:
+        cols: 1
+        size: root.width, root.height
+        padding: [0, 0, 0, 0]
+        spacing: [0, 0.6]
+
+        GridLayout:
+            cols: 7
+            height: 59
+            size_hint: 1, None
+            padding: [56, 16, 0, 0]
+            spacing: 15
+
+            JoButton:
+                id: open
+                size: 80, 10
+                text: "Open"
+                on_release: root.load(drag="")
+            JoButton:
+                id: save
+                size: 80, 10
+                text: "Save"
+                on_release: root.save_file()
+            JoButton:
+                id: save_as
+                size: 80, 10
+                text: "Save as"
+                on_release: root.save_file(save_as=True)
+
+            FloatLayout:
+                size_hint: None, 1
+
+                JoButton:
+                    id: find_button
+                    background_color: 230/255,  230/255,  230/255,  1
+                    size: 80, 10
+                    pos_hint: {'x':0, 'y':0}
+                    text: "Find/r"
+                    on_release:
+                        if find_button.text == "Find/r": find_button.text = "f/Replace"; \
+                        find_button.background_color=[230/255,  230/255,  230/255,  1]; \
+                        find_button.disabled = True; \
+                        find_textinput2.opacity = 1; \
+                        root.replace_animation();
+                        else: find_button.text = "Find/r"; \
+                        find_button.background_color=[230/255,  230/255,  230/255,  1]; \
+                        find_button.disabled = True; \
+                        root.replace_animation(reverse=True);
+                FindTextInput:
+                    id: find_textinput
+                    hint_text: "Find"
+                    multiline: False
+                    write_tab: False
+                    posx: 0.89
+                    posy: 0.09
+                    pos_hint: {'x':self.posx, 'y':self.posy}
+                    height: 0
+                    width: 1
+                    font_name: 'MEIRYO.TTC'
+                    size_hint: None, None
+                    background_normal: ''
+                    background_color: [1, 1, 1, 1]
+                    on_focus:
+                        if find_button.text == "Find/r": root.find_animation([find_textinput, find_next, find_prev])
+                FindTextInput:
+                    id: find_textinput2
+                    opacity: 0
+                    hint_text: "Replace"
+                    multiline: False
+                    write_tab: False
+                    posx: 3.56
+                    posy: -0.07
+                    pos_hint: {'x': self.posx, 'y':self.posy}
+                    height: 1
+                    width: 1
+                    font_name: 'MEIRYO.TTC'
+                    size_hint: None, None
+                    background_normal: ''
+                    background_color: [1, 1, 1, 1]
+                JoButton:
+                    id: find_next
+                    text: "=>"
+                    size: 24, 28
+                    #pos: 492, 615
+                    posx:  1.51
+                    posy: 1.12
+                    pos_hint: {'x':self.posx, 'y':self.posy}
+                    canvas.before:
+                        PushMatrix
+                        Rotate:
+                            angle: 90
+                            origin: self.center
+
+                    canvas.after:
+                        PopMatrix
+
+                    on_release: root.find_order("up")
+                JoButton:
+                    id: find_prev
+                    text: "=>"
+                    size: 24, 28
+                    #pos: 1002, 556
+                    posx:  6.61
+                    posy: 0.12
+                    pos_hint: {'x':self.posx, 'y':self.posy}
+                    canvas.before:
+                        PushMatrix
+                        Rotate:
+                            angle: -90
+                            origin: self.center
+
+                    canvas.after:
+                        PopMatrix
+
+                    on_release: root.find_order("down")
+                ReplaceButton:
+                    id: replace_all
+                    text: "R"
+                    size: 24, 29
+                    #pos: 1007, 555
+                    posx:  15.86
+                    posy: 0.1
+                    pos_hint: {'x': self.posx, 'y': self.posy}
+                    on_release: root.replace_word()
+                Button:
+                    size: 15, 15
+                    size_hint: None, None
+                    background_normal: ""
+                    pos: 7, root.height - 17
+                    background_color: [42 / 255, 87 / 255, 154 / 255, 1]
+                    on_press: root.change_theme([[42 / 255, 87 / 255, 154 / 255, 1], [235 / 255, 245 / 255, 250 / 255, 1], [230 / 255, 230 / 255, 230 / 255, 1]])
+                Button:
+                    size: 15, 15
+                    background_normal: ""
+                    size_hint: None, None
+                    pos: 27, root.height - 17
+                    background_color: [40/255,  168/255,  234/255,  1]
+                    on_press: root.change_theme([[40/255,  168/255,  234/255,  1], [235 / 255, 245 / 255, 250 / 255, 1], [230 / 255, 230 / 255, 230 / 255, 1]])
+                Button:
+                    size: 15, 15
+                    background_normal: ""
+                    size_hint: None, None
+                    pos: 7, root.height - 37
+                    background_color: [164/255,  55/255,  58/255,  1]
+                    on_press: root.change_theme([[164/255,  55/255,  58/255,  1], [235 / 255, 245 / 255, 250 / 255, 1], [230 / 255, 230 / 255, 230 / 255, 1]])
+                Button:
+                    size: 15, 15
+                    background_normal: ""
+                    size_hint: None, None
+                    pos: 27, root.height - 37
+                    background_color: [183/255,  71/255,  42/255,  1]
+                    on_press: root.change_theme([[183/255,  71/255,  42/255,  1], [235 / 255, 245 / 255, 250 / 255, 1], [230 / 255, 230 / 255, 230 / 255, 1]])
+                Button:
+                    size: 15, 15
+                    background_normal: ""
+                    size_hint: None, None
+                    pos: 27, root.height - 57
+                    background_color: [33/255,  115/255,  70/255,  1]
+                    on_press: root.change_theme([[33/255,  115/255,  70/255,  1], [235 / 255, 245 / 255, 250 / 255, 1], [230 / 255, 230 / 255, 230 / 255, 1]])
+                Button:
+                    size: 15, 15
+                    background_normal: ""
+                    size_hint: None, None
+                    pos: 7, root.height - 57
+                    background_color: [70/255,  71/255,  117/255,  1]
+                    on_press: root.change_theme([[70/255,  71/255,  117/255,  1], [235 / 255, 245 / 255, 250 / 255, 1], [230 / 255, 230 / 255, 230 / 255, 1]])
+
+        GridLayout:
+            cols: 2
+            size_hint: (1, None)
+            height: 36
+
+            GridLayout:
+                cols:1
+                id: title_grid2
+                size_hint: (None, None)
+                height: 36
+                width: 52
+
+            ScrollView:
+                scroll_type: ['bars']
+                bar_width: '0dp'
+                scroll_wheel_distance: 0
+                scroll_x: scroll.scroll_x
+                effect_cls: 'ScrollEffect'
+                size_hint: (1, None)
+                height: 36
+                GridLayout:
+                    id: title_grid
+                    size_hint: (None, None)
+                    width: self.minimum_width
+                    spacing: [2, 1]
+                    height: 36
+
+        GridLayout:
+            cols: 2
+
+            RecycleView:
+                id: scroll2
+                scroll_type: ['bars']
+                bar_width: '0dp'
+                scroll_wheel_distance: 0
+                effect_cls: 'ScrollEffect'
+                size_hint: (None, 1)
+                viewclass: 'JoButtonLabel'
+                width: 51
+                scroll_y: scroll.scroll_y
+
+                RecycleGridLayout:
+                    id: rows_grid
+                    cols: 1
+                    size_hint: (None, None)
+                    height: self.minimum_height
+                    spacing: [2, 2]
+                    width: 51
+
+            RecycleView:
+                id: scroll
+                scroll_type: ['bars']
+                bar_width: '10dp'
+                bar_color: root.theme[0]
+                scroll_wheel_distance: 50
+                effect_cls: 'ScrollEffect'
+                size_hint: (1, 1)
+                viewclass: 'JoTextInput'
+                smooth_scroll_end: 50
+
+                RecycleGridLayout:
+                    id: cells_grid
+                    cols: 1
+                    size_hint: (None, None)
+                    key_size: 'dyn_size'
+                    size: self.minimum_size
+                    spacing: [2, 2]
+
+        FloatLayout:
+            id: for_float
+            size_hint: None, None
+            size: 1, 1
+<JoButton>:
+    state_image: self.background_normal if self.state == 'normal' else self.background_down
+    disabled_image: self.background_disabled_normal if self.state == 'normal' else self.background_disabled_down
+    background_normal: ''
+    background_color: ([235/255, 245/255, 250/255, 1] if not self.state == 'down' else (root.theme[0]))
+    color: (root.theme[0] if not self.state == 'down' else (1, 1, 1, 1))
+    size_hint: None, None
+
+    canvas:
+
+        ####Rounded Border###
+        Color:
+            rgba: 230/255,  230/255,  230/255,  1
+
+        RoundedRectangle:
+            pos: self.x-6, self.y
+            size: self.width+12, self.height+7
+            radius: [10, 10, 0, 0]
+
+        ###Rounded Upper-Border###
+        Color:
+            rgba: self.background_color
+
+        RoundedRectangle:
+            pos: self.x-4, self.y+1
+            size: self.width+8, self.height+4
+            radius: [10, 10, 0, 0]
+
+        ###Text Drawing###
+        Color:
+            rgba: 1, 1, 1, 1
+
+        Rectangle:
+            texture: self.texture
+            size: self.texture_size
+            pos: int(self.center_x - self.texture_size[0] / 2.), int(self.center_y - self.texture_size[1] / 2.)
+
+<ReplaceButton>:
+    state_image: self.background_normal if self.state == 'normal' else self.background_down
+    disabled_image: self.background_disabled_normal if self.state == 'normal' else self.background_disabled_down
+    background_normal: ''
+    background_color: ([235/255, 245/255, 250/255, 1] if not self.state == 'down' else (root.theme[0]))
+    color: (root.theme[0] if not self.state == 'down' else (1, 1, 1, 1))
+    size_hint: None, None
+
+    canvas:
+        ####Rounded Border###
+        Color:
+            rgba: 230/255,  230/255,  230/255,  1
+
+        RoundedRectangle:
+            pos: self.x-7, self.y-4
+            size: self.width+14, self.height+8
+            radius: [6, 6, 6, 6]
+
+        ###Rounded Upper-Border###
+        Color:
+            rgba: self.background_color
+
+        RoundedRectangle:
+            pos: self.x-4, self.y-1
+            size: self.width+8, self.height+2
+            radius: [6, 6, 6, 6]
+
+        ###Text Drawing###
+        Color:
+            rgba: 1, 1, 1, 1
+
+        Rectangle:
+            texture: self.texture
+            size: self.texture_size
+            pos: int(self.center_x - self.texture_size[0] / 2.), int(self.center_y - self.texture_size[1] / 2.)
+
+<FindTextInput>
+    padding: [0, 5, 0, 0]
+    canvas.before:
+
+        ###Border###
+        Color:
+            rgba: 235/255, 245/255, 250/255, 1
+        Rectangle:
+            pos: self.x-3, self.y-3
+            size: self.width+6, self.height+6
+
+        ###Upper Border###
+        Color:
+            rgba: 1, 1, 1, 1
+
+        Rectangle:
+            pos: self.x, self.y
+            size: self.width, self.height
+
+        ###Curser Drawing###
+        Color:
+            rgba:
+                ([29/255, 111/255, 66/255, 1]
+                if self.focus and not self._cursor_blink
+                else (0, 0, 0, 0))
+
+        Rectangle:
+            pos: [int(x) for x in self.cursor_pos]
+            size: root.cursor_width, -self.line_height
+
+        ###Text Color###
+        Color:
+            rgba: self.disabled_foreground_color if self.disabled else (self.hint_text_color if not self.text else self.foreground_color)
+
+<JoButtonLabel>:
+    state_image: self.background_normal if self.state == 'normal' else self.background_down
+    disabled_image: self.background_disabled_normal if self.state == 'normal' else self.background_disabled_down
+    background_normal: ''
+    background_color: root.theme[0]
+    color: 1,  1,  1,  1
+    size_hint: None, None
+
+    canvas:
+        Color:
+            rgba: self.background_color
+
+        BorderImage:
+            border: self.border
+            pos: self.pos
+            size: self.size
+            source: self.disabled_image if self.disabled else self.state_image
+
+        Color:
+            rgba: 1, 1, 1, 1
+
+        Rectangle:
+            texture: self.texture
+            size: self.texture_size
+            pos: int(self.center_x - self.texture_size[0] / 2.), int(self.center_y - self.texture_size[1] / 2.)
+
+<JoTextInput>:
+    canvas.before:
+
+        ###On-Focus Border###
+        Color:
+            rgba: (root.theme[0] if self.focus else (1, 1, 1, 1))
+
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+        ###On-Focus Upper Border###
+        Color:
+            rgba: 1, 1, 1, 1
+
+        Rectangle:
+            pos: self.x+3, self.y+3
+            size: self.width-6, self.height-6
+
+        ###Curser Drawing###
+        Color:
+            rgba:
+                ([29/255, 111/255, 66/255, 1]
+                if self.focus and not self._cursor_blink
+                else (0, 0, 0, 0))
+
+        Rectangle:
+            pos: [int(x) for x in self.cursor_pos]
+            size: root.cursor_width, -self.line_height
+
+        ###Text Color###
+        Color:
+            rgba: self.disabled_foreground_color if self.disabled else (self.hint_text_color if not self.text else self.foreground_color)
