@@ -1,44 +1,45 @@
 # PyCSV Editor
 
-A GUI based python CSV editor, made with kivy library, there was not a decent CSV editor made with python on github, so i made it myself.
+Very Rich GUI based python CSV editor, made with kivy library, there was not a decent CSV editor made with python on github, so i started made it myself, and then it have growen to a big project.
 
 # Features
 
-Modern design.
+Modern and animated design.
 
 Open, save, save as functions.
 
-Find next/previos function (suopprts partial searching).
+Find next/previos and Replace functions (suopprts partial searching/replacing).
 
-Find n Replace function.
+Duplicated rows marking.
+
+bulk application of duplicates edits, (edits made to an original row can be applied to all of it's duplicates)
+
+Columns filtering, display spacific columns and hide the others, you still can view and edit the others from the details menu by right clicking an row number.
+
+AI based spell checking with custom models.
 
 Dragn n drop support.
 
-Auto backup function (every 5 mins).
+Auto backup with custom interval with rolling scheme.
 
-Moving throug cells with up and down arrows.
+Navigation throug cells and columns eaisly with arrow keys.
 
-Row hightlighting by clicking on the row number, navigate between highlighted rows by using CTRL and SHIFT.
+Resizable columns with mouse draging.
 
-Theme chnager.
+Row hightlighting.
 
-Fully animated.
+Theme changer.
+
+And many more...
 
 
 # Requirments
 
-pip install kivy
-
-python -m pip install docutils pygments pypiwin32 kivy.deps.sdl2 kivy.deps.glew;
-
-python -m pip install kivy.deps.gstreamer
-
+python -m pip install kivy[full] kivy_examples
 pip install unicodecsv
-
 pip install plyer
-
 pip install spello
 
-Python version must be before 2.7+, Kivy doesn't support 2.8+.
+Python v2.9+
 
-K-CSV Editor.py and KCsvEditor.kv and MEIRYI.TTC must be in the same directory.
+PyCSV.py and PyCSV.kv and MEIRYI.TTC must be in the same directory.
