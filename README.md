@@ -30,7 +30,7 @@ Row hightlighting.
 
 Theme changer.
 
-And many more...
+And many more in the readme...
 
 # Spell Check
 
