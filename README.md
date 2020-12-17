@@ -1,4 +1,4 @@
-# K-CSV Editor
+# PyCSV Editor
 
 A GUI based python CSV editor, made with kivy library, there was not a decent CSV editor made with python on github, so i made it myself.
 
