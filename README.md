@@ -34,14 +34,17 @@ And many more in the documentation...
 
 # Spell Check
 
-A standared small model is encluded.
+A standared small model is included.
 You can download large full english models from here: https://github.com/hellohaptik/spello#get-started-with-pre-trained-models
 
 # Requirments
 
 python -m pip install kivy[full] kivy_examples
+
 pip install unicodecsv
+
 pip install plyer
+
 pip install spello
 
 Python v2.9+
