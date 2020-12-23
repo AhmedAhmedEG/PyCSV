@@ -8,7 +8,7 @@ Modern and animated design.
 
 Open, save, save as functions.
 
-Find next/previos and Replace functions (suopprts partial searching/replacing).
+Find next/previos and Replace functions (supports partial searching/replacing).
 
 Duplicated rows marking.
 
@@ -30,11 +30,12 @@ Row hightlighting.
 
 Theme changer.
 
-And many more in the readme...
+And many more in the documentation...
 
 # Spell Check
 
-you can download full english models from here: https://github.com/hellohaptik/spello#get-started-with-pre-trained-models
+A standared small model is encluded.
+You can download large full english models from here: https://github.com/hellohaptik/spello#get-started-with-pre-trained-models
 
 # Requirments
 
