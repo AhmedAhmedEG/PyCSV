@@ -1,0 +1,5 @@
+Wanted Colmuns =
+Autosave Interval=1
+Autosave Rolls=1
+Default Column Width=236
+Model Name=Mixed-Model
