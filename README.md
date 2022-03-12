@@ -2,7 +2,7 @@
 
 Very Rich GUI based python CSV editor, made with kivy python library, there was not a decent CSV editor made with python on github, so I started making one myself, and then it have grown to a big project.
 
-![Screenshot_9](https://user-images.githubusercontent.com/16827679/158036991-8efbebbd-4131-41d5-9888-fb3dfd62585f.png)
+![Screenshot_10](https://user-images.githubusercontent.com/16827679/158037068-e9acaeb8-69ed-4537-9af2-f6290cb151ac.png)
 
 
 # How To Use
